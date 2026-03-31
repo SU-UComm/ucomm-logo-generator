@@ -4,9 +4,11 @@
   "private": true,
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' DEV=true next dev --webpack",
+    "start": "next dev --webpack",
     "build": "next build --webpack",
     "analyze": "ANALYZE=true next build --webpack",
     "preview": "next build  --webpack && next start --webpack",
+    "test": "eslint ./src ./app && tsc",
     "lint": "eslint ./src ./app && tsc",
     "postinstall": "git config --local core.hooksPath .githooks/; exit 0"
   },

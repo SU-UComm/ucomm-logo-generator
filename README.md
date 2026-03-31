@@ -45,9 +45,12 @@ yarn start
 ## Available Scripts
 
 - `yarn start` - Runs the app in development mode
-- `yarn build` - Builds the app for production to the `build` folder
-- `yarn test` - Launches the test runner in interactive watch mode
-- `yarn eject` - Removes the single build dependency (one-way operation)
+- `yarn dev` - Runs the app in development mode with Node.js inspector attached
+- `yarn build` - Builds the app for production
+- `yarn preview` - Builds and serves the production build locally
+- `yarn test` - Runs linting and type checking
+- `yarn lint` - Runs linting and type checking
+- `yarn analyze` - Builds the app with bundle analysis enabled
 
 ## Usage
 
@@ -104,10 +107,14 @@ For complete brand guidelines, visit [Stanford's Identity Toolkit](https://ident
 ```
 src/
 ├── components/     # React components
-├── assets/        # Stanford logos, fonts, and images
+├── hooks/         # Custom React hooks
 ├── styles/        # CSS and styling files
-├── utils/         # Helper functions for logo generation
-└── App.js         # Main application component
+└── zod/           # Zod validation schemas
+app/
+├── api/           # Next.js API routes
+├── [logo]/        # Dynamic logo page route
+├── layout.tsx     # Root layout
+└── page.tsx       # Home page
 ```
 
 ## Contributing
