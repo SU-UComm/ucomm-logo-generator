@@ -9,7 +9,20 @@ const nextConfig: NextConfig = {
     fetches: {
       fullUrl: true,
     },
-  }
+  },
+  async headers() {
+    return [
+      {
+        source: "/:path*",
+        headers: [
+          {
+            key: "Content-Security-Policy",
+            value: "frame-ancestors 'self' https://*.stanford.edu https://stanford.edu",
+          },
+        ],
+      },
+    ]
+  },
 }
 
 module.exports = nextConfig

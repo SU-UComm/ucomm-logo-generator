@@ -133,15 +133,38 @@ export const POST = async (request: Request) => {
   const blackSvg = Buffer.from(logoFile.toString().replaceAll(/(fill|stroke)="#.*?"/g, '$1="#000000"'))
   const whiteSvg = Buffer.from(logoFile.toString().replaceAll(/(fill|stroke)="#.*?"/g, '$1="#ffffff"'))
 
-  // Call the Cloud convert to convert all 3 SVG files in parallel.
-  const epsFiles = await Promise.all([
-    formats.includes("eps-full") && getEpsFile(logoFile.toString("base64")),
-    formats.includes("eps-black") && getEpsFile(blackSvg.toString("base64")),
-    formats.includes("eps-white") && getEpsFile(whiteSvg.toString("base64")),
-  ])
-  if (epsFiles[0]) zipFile.file("logo.eps", epsFiles[0])
-  if (epsFiles[1]) zipFile.file("black-logo.eps", epsFiles[1])
-  if (epsFiles[2]) zipFile.file("white-logo.eps", epsFiles[2])
+  type EpsFormat = "eps-full" | "eps-black" | "eps-white"
+
+  const epsExports = (
+    [
+      {format: "eps-full" as const, filename: "logo.eps", svg: logoFile},
+      {format: "eps-black" as const, filename: "black-logo.eps", svg: blackSvg},
+      {format: "eps-white" as const, filename: "white-logo.eps", svg: whiteSvg},
+    ] as const
+  ).filter(({format}) => formats.includes(format)) as {format: EpsFormat; filename: string; svg: Buffer}[]
+
+  if (epsExports.length > 0) {
+    if (!process.env.CLOUD_CONVERT_KEY) {
+      return new NextResponse("EPS export requires CLOUD_CONVERT_KEY to be configured.", {status: 503})
+    }
+
+    try {
+      const epsFiles = await Promise.all(
+        epsExports.map(async ({filename, svg}) => ({
+          filename,
+          buffer: await getEpsFile(svg.toString("base64")),
+        }))
+      )
+
+      for (const {filename, buffer} of epsFiles) {
+        zipFile.file(filename, buffer)
+      }
+    } catch (error) {
+      const message = error instanceof Error ? error.message : "EPS conversion failed"
+      console.error("EPS conversion failed:", error)
+      return new NextResponse(message, {status: 500})
+    }
+  }
 
   // Return the zip as a blob for the browser to download.
   const generatedFile = await zipFile.generateAsync({type: "blob"})
@@ -155,15 +178,12 @@ export const POST = async (request: Request) => {
   })
 }
 
-const getEpsFile = async (imageBase64: string) => {
-  // No API key?
-  if (!process.env.CLOUD_CONVERT_KEY) return
-
+const getEpsFile = async (imageBase64: string): Promise<Buffer> => {
   const useSandbox = !!process.env.CLOUD_CONVERT_SANDBOX
 
-  if (useSandbox) imageBase64 = new Buffer(testLogo).toString("base64")
+  if (useSandbox) imageBase64 = Buffer.from(testLogo).toString("base64")
 
-  const cloudConvert = new CloudConvert(process.env.CLOUD_CONVERT_KEY, useSandbox)
+  const cloudConvert = new CloudConvert(process.env.CLOUD_CONVERT_KEY!, useSandbox)
 
   let job = await cloudConvert.jobs.create({
     tasks: {
@@ -186,13 +206,17 @@ const getEpsFile = async (imageBase64: string) => {
     },
   })
 
-  // Wait for job completion, then grab the exported URL after the conversion.
   job = await cloudConvert.jobs.wait(job.id)
   const file = cloudConvert.jobs.getExportUrls(job)[0]
 
-  if (file?.url) {
-    // Fetch the file contents and return it as a buffer, so it can be easily added to the ZIP.
-    const epsFile = await fetch(file.url).then(res => res.blob())
-    return Buffer.from(await epsFile.arrayBuffer())
+  if (!file?.url) {
+    throw new Error("CloudConvert did not return an EPS export URL.")
   }
+
+  const epsResponse = await fetch(file.url)
+  if (!epsResponse.ok) {
+    throw new Error("Failed to download converted EPS file from CloudConvert.")
+  }
+
+  return Buffer.from(await epsResponse.arrayBuffer())
 }

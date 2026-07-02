@@ -1,14 +1,20 @@
-import LockupSelection from "@components/elements/lockup/lockup-selection"
+import Link from "next/link"
+import {LOCKUP_OPTIONS} from "@components/elements/lockup/lockup-options"
 
 export const maxDuration = 60
 
-const Home = async () => {
+const Home = () => {
   return (
-    <article>
-      <h1 className="sr-only" id="page-title">
-        Site name
-      </h1>
-      <LockupSelection allowChoice />
+    <article className="m-20">
+      <h1>Stanford Logo Generator</h1>
+      <p>Select a logo style:</p>
+      <ul className="list-inside list-disc">
+        {LOCKUP_OPTIONS.map(({slug, label}) => (
+          <li key={slug}>
+            <Link href={`/${slug}`}>{label}</Link>
+          </li>
+        ))}
+      </ul>
     </article>
   )
 }
