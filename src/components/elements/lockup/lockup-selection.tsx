@@ -2,11 +2,11 @@
 
 import LockupUnit from "@components/elements/lockup/lockup-unit"
 import Button from "@components/elements/button"
-import {ChangeEvent, useId, useRef, useState} from "react"
+import { ChangeEvent, useId, useRef, useState } from "react"
 import downloadjs from "downloadjs"
-import {useBoolean, useCounter, useDebounceCallback} from "usehooks-ts"
+import { useBoolean, useCounter, useDebounceCallback } from "usehooks-ts"
 import SelectList from "@components/elements/select-list"
-import {clsx} from "clsx"
+import { clsx } from "clsx"
 import LockupUnitTwoLines from "@components/elements/lockup/lockup-unit-two-lines"
 import LockupUnitTwoLinesBigSmall from "@components/elements/lockup/lockup-unit-two-lines-small-big"
 import LockupUnitLevel from "@components/elements/lockup/lockup-unit-level"
@@ -20,7 +20,7 @@ import LockupVerticalUnitTwoLinesLevel from "@components/elements/lockup/lockup-
 import LockupVerticalSchool from "@components/elements/lockup/lockup-vertical-school"
 import LockupVerticalSchoolUnit from "@components/elements/lockup/lockup-vertical-school-unit"
 import LockupVerticalSchoolUnitLevel from "@components/elements/lockup/lockup-vertical-school-unit-level"
-import {ArrowPathIcon, ExclamationTriangleIcon, XMarkIcon} from "@heroicons/react/16/solid"
+import { ArrowPathIcon, ExclamationTriangleIcon, XMarkIcon } from "@heroicons/react/16/solid"
 
 export type LockupProps = {
   line1?: string
@@ -223,8 +223,8 @@ export const LockupSelection = ({
   }
 
   const ref = useRef<HTMLDivElement>(null)
-  const {value: downloadInProgress, setValue: setDownloadInProgress} = useBoolean(false)
-  const {value: downloadFailed, setValue: setDownloadFailed} = useBoolean(false)
+  const { value: downloadInProgress, setValue: setDownloadInProgress } = useBoolean(false)
+  const { value: downloadFailed, setValue: setDownloadFailed } = useBoolean(false)
 
   const [lockupOption, setLockupOption] = useState<LockupOption>(lockupChoice)
   const [line1, setLine1State] = useState(initLine1)
@@ -237,14 +237,14 @@ export const LockupSelection = ({
   const setLine4 = useDebounceCallback(setLine4State, 500)
 
   const formats = [
-    {name: "png-black", label: "PNG: all black logo, on transparent background", defaultChecked: false},
-    {name: "png-white", label: "PNG: all white logo, on transparent background", defaultChecked: false},
-    {name: "png-full", label: "PNG: full color, on transparent background", defaultChecked: true},
-    {name: "jpg", label: "JPG: full color, on white background", defaultChecked: true},
-    {name: "svg", label: "SVG: full color, scalable vector graphics", defaultChecked: false},
-    {name: "eps-black", label: "EPS: all black vector", defaultChecked: false},
-    {name: "eps-white", label: "EPS: all white vector", defaultChecked: false},
-    {name: "eps-full", label: "EPS: full color (Cardinal red + black)", defaultChecked: false},
+    { name: "png-black", label: "PNG: all black logo, on transparent background", defaultChecked: false },
+    { name: "png-white", label: "PNG: all white logo, on transparent background", defaultChecked: false },
+    { name: "png-full", label: "PNG: full color, on transparent background", defaultChecked: true },
+    { name: "jpg", label: "JPG: full color, on white background", defaultChecked: true },
+    { name: "svg", label: "SVG: full color, scalable vector graphics", defaultChecked: false },
+    { name: "eps-black", label: "EPS: all black vector", defaultChecked: false },
+    { name: "eps-white", label: "EPS: all white vector", defaultChecked: false },
+    { name: "eps-full", label: "EPS: full color (Cardinal red + black)", defaultChecked: false },
   ]
   const [chosenFormats, setChosenFormats] = useState(
     formats.filter(format => format.defaultChecked).map(format => format.name)
@@ -307,20 +307,20 @@ export const LockupSelection = ({
             label="Logo Style"
             required
             options={[
-              {value: "unit", label: "Unit (1 Line)"},
-              {value: "unit_2_line", label: "Unit (2 Lines)"},
-              {value: "unit_level", label: "Unit + Level (1 Line)"},
-              {value: "unit_2_lines_big_small", label: "Unit (2 Lines, Small/Big)"},
-              {value: "unit_2_lines_level", label: "Unit (2 Lines) + Level"},
-              {value: "school", label: "School Only"},
-              {value: "alt_school", label: "Alt School + Unit (1 Line)"},
-              {value: "multidisciplinary", label: "Multidisciplinary (or long school name)"},
-              {value: "vertical_unit", label: "Vertical - Unit"},
-              {value: "vertical_unit_2_lines", label: "Vertical - Unit (2 Lines)"},
-              {value: "vertical_2_lines_level", label: "Vertical - Unit (2 Lines) + Level"},
-              {value: "vertical_school", label: "Vertical - School"},
-              {value: "vertical_school_unit", label: "Vertical - School + Unit (2 Lines)"},
-              {value: "vertical_school_unit_level", label: "Vertical - School + Unit + Level"},
+              { value: "unit", label: "Unit (1 Line)" },
+              { value: "unit_2_line", label: "Unit (2 Lines)" },
+              { value: "unit_level", label: "Unit + Level (1 Line)" },
+              { value: "unit_2_lines_big_small", label: "Unit (2 Lines, Small/Big)" },
+              { value: "unit_2_lines_level", label: "Unit (2 Lines) + Level" },
+              { value: "school", label: "School Only" },
+              { value: "alt_school", label: "Alt School + Unit (1 Line)" },
+              { value: "multidisciplinary", label: "Multidisciplinary (or long school name)" },
+              { value: "vertical_unit", label: "Vertical - Unit" },
+              { value: "vertical_unit_2_lines", label: "Vertical - Unit (2 Lines)" },
+              { value: "vertical_2_lines_level", label: "Vertical - Unit (2 Lines) + Level" },
+              { value: "vertical_school", label: "Vertical - School" },
+              { value: "vertical_school_unit", label: "Vertical - School + Unit (2 Lines)" },
+              { value: "vertical_school_unit_level", label: "Vertical - School + Unit + Level" },
             ]}
             defaultValue="unit"
             onChange={(_e, value) => setLockupOption(value as LockupOption)}
@@ -330,7 +330,7 @@ export const LockupSelection = ({
 
       <div
         ref={ref}
-        className={clsx("p-2 [&_svg]:h-[100px]", {"[&_svg]:h-[200px]": lockupOption.includes("vertical")})}
+        className={clsx("p-2 [&_svg]:h-[100px] mb-6", { "[&_svg]:h-[200px]": lockupOption.includes("vertical") })}
       >
         <LockupElement lockupOption={lockupOption} line1={line1} line2={line2} line3={line3} line4={line4} />
       </div>
@@ -369,7 +369,7 @@ export const LockupSelection = ({
         <fieldset>
           <legend className="mb-5 text-4xl font-bold">File Formats</legend>
           {formats.map(format => (
-            <label key={format.name} className="mb-2 flex cursor-pointer items-center gap-5 text-5xl hocus:underline">
+            <label key={format.name} className="mb-4 last:mb-0 flex cursor-pointer items-center gap-5 text-4xl hocus:underline">
               <input
                 type="checkbox"
                 checked={chosenFormats.includes(format.name)}
@@ -403,17 +403,17 @@ const LockupInput = ({
   defaultValue?: string
 }) => {
   const id = useId()
-  const {count, setCount} = useCounter(defaultValue?.length || 0)
+  const { count, setCount } = useCounter(defaultValue?.length || 0)
   const onInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     onChange(e)
     setCount(e.target?.value.length || 0)
   }
   return (
-    <div className={clsx("mb-10 flex w-fit flex-col", {hidden})}>
-      <div className="flex items-center gap-5">
-        <label htmlFor={id}>{label}</label>
+    <div className={clsx("mb-6 flex w-fit flex-col", { hidden })}>
+      <div className="flex flex-col gap-3 w-[45ch]">
+        <label className="font-bold" htmlFor={id}>{label}</label>
         <input
-          className="p-25 h-[40px] w-[250px] text-3xl"
+          className="p-25 h-[40px] w-full text-3xl mb-3"
           id={id}
           onChange={onInputChange}
           defaultValue={defaultValue}
