@@ -44,6 +44,100 @@ export type LockupOption =
   | "vertical_school_unit"
   | "vertical_school_unit_level"
 
+type LockupFieldLabels = {
+  line1: string
+  line2: string
+  line3: string
+  line4: string
+}
+
+const LOCKUP_FIELD_LABELS: Record<LockupOption, LockupFieldLabels> = {
+  unit: {
+    line1: "Department name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  school: {
+    line1: "School name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  vertical_unit: {
+    line1: "Department name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  vertical_school: {
+    line1: "School name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  unit_2_line: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "",
+    line4: "",
+  },
+  unit_level: {
+    line1: "Department name",
+    line2: "Parent unit",
+    line3: "",
+    line4: "",
+  },
+  unit_2_lines_big_small: {
+    line1: "Department small text",
+    line2: "Department big text",
+    line3: "",
+    line4: "",
+  },
+  alt_school: {
+    line1: "School name",
+    line2: "Department name",
+    line3: "",
+    line4: "",
+  },
+  multidisciplinary: {
+    line1: "Department name",
+    line2: "Long school name or a second school name",
+    line3: "",
+    line4: "",
+  },
+  vertical_unit_2_lines: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "",
+    line4: "",
+  },
+  unit_2_lines_level: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "Parent unit",
+    line4: "",
+  },
+  vertical_2_lines_level: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "Parent unit",
+    line4: "",
+  },
+  vertical_school_unit: {
+    line1: "School name",
+    line2: "Department line 1",
+    line3: "Department line 2",
+    line4: "",
+  },
+  vertical_school_unit_level: {
+    line1: "School name",
+    line2: "Department line 1",
+    line3: "Department line 2",
+    line4: "Parent unit",
+  },
+}
+
 export const LockupSelection = ({
   allowChoice = false,
   lockupChoice = "unit",
@@ -241,17 +335,21 @@ export const LockupSelection = ({
         <LockupElement lockupOption={lockupOption} line1={line1} line2={line2} line3={line3} line4={line4} />
       </div>
       <form className="mb-10">
-        <LockupInput onChange={e => setLine1(e.target.value)} defaultValue={line1} label="Line 1" />
+        <LockupInput
+          onChange={e => setLine1(e.target.value)}
+          defaultValue={line1}
+          label={LOCKUP_FIELD_LABELS[lockupOption].line1}
+        />
         <LockupInput
           onChange={e => setLine2(e.target.value)}
           defaultValue={line2}
-          label="Line 2"
+          label={LOCKUP_FIELD_LABELS[lockupOption].line2}
           hidden={["unit", "school", "vertical_unit", "vertical_school"].includes(lockupOption)}
         />
         <LockupInput
           onChange={e => setLine3(e.target.value)}
           defaultValue={line3}
-          label="Line 3"
+          label={LOCKUP_FIELD_LABELS[lockupOption].line3}
           hidden={
             ![
               "unit_2_lines_level",
@@ -264,7 +362,7 @@ export const LockupSelection = ({
         <LockupInput
           onChange={e => setLine4(e.target.value)}
           defaultValue={line4}
-          label="Line 4"
+          label={LOCKUP_FIELD_LABELS[lockupOption].line4}
           hidden={"vertical_school_unit_level" != lockupOption}
         />
 
