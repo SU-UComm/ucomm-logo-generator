@@ -12,7 +12,6 @@
   },
   "dependencies": {
     "@heroicons/react": "^2.2.0",
-    "@mui/base": "5.0.0-dev.20240529-082515-213b5e33ab",
     "@tailwindcss/container-queries": "^0.1.1",
     "@types/node": "25.1.0",
     "@types/react": "19.2.10",
