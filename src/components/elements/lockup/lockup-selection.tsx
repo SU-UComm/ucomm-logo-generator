@@ -214,8 +214,8 @@ export const LockupSelection = ({lockupChoice = "unit"}: {lockupChoice?: LockupO
   const setLine4 = useDebounceCallback(setLine4State, 500)
 
   const formats = [
-    {name: "png-black", label: "PNG: all black logo, on transparent background", defaultChecked: false},
-    {name: "png-white", label: "PNG: all white logo, on transparent background", defaultChecked: false},
+    {name: "png-black", label: "PNG: all black logo, on transparent background", defaultChecked: true},
+    {name: "png-white", label: "PNG: all white logo, on transparent background", defaultChecked: true},
     {name: "png-full", label: "PNG: full color, on transparent background", defaultChecked: true},
     {name: "jpg", label: "JPG: full color, on white background", defaultChecked: true},
     {name: "svg", label: "SVG: full color, scalable vector graphics", defaultChecked: false},
