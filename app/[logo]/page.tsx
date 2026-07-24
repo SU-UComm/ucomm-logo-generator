@@ -1,4 +1,5 @@
-import {LockupSelection, LockupOption} from "@components/elements/lockup/lockup-selection"
+import LockupSelection from "@components/elements/lockup/lockup-selection"
+import {LOCKUP_ROUTES, LockupOption} from "@components/elements/lockup/lockup-options"
 
 // https://vercel.com/docs/functions/runtimes#max-duration
 export const maxDuration = 60
@@ -18,22 +19,7 @@ const Page = async (props: PageProps) => {
 }
 
 export const generateStaticParams = async (): Promise<Array<PageParams>> => {
-  return [
-    {logo: "unit"},
-    {logo: "unit_2_line"},
-    {logo: "unit_level"},
-    {logo: "unit_2_lines_big_small"},
-    {logo: "unit_2_lines_level"},
-    {logo: "school"},
-    {logo: "alt_school"},
-    {logo: "multidisciplinary"},
-    {logo: "vertical_unit"},
-    {logo: "vertical_unit_2_lines"},
-    {logo: "vertical_2_lines_level"},
-    {logo: "vertical_school"},
-    {logo: "vertical_school_unit"},
-    {logo: "vertical_school_unit_level"},
-  ]
+  return LOCKUP_ROUTES.map(({slug}) => ({logo: slug}))
 }
 
 export default Page

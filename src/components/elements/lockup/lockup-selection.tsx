@@ -5,8 +5,8 @@ import Button from "@components/elements/button"
 import {ChangeEvent, useId, useRef, useState} from "react"
 import downloadjs from "downloadjs"
 import {useBoolean, useCounter, useDebounceCallback} from "usehooks-ts"
-import SelectList from "@components/elements/select-list"
 import {clsx} from "clsx"
+import {LockupOption} from "@components/elements/lockup/lockup-options"
 import LockupUnitTwoLines from "@components/elements/lockup/lockup-unit-two-lines"
 import LockupUnitTwoLinesBigSmall from "@components/elements/lockup/lockup-unit-two-lines-small-big"
 import LockupUnitLevel from "@components/elements/lockup/lockup-unit-level"
@@ -28,29 +28,101 @@ export type LockupProps = {
   line3?: string
   line4?: string
 }
-export type LockupOption =
-  | "unit"
-  | "unit_2_line"
-  | "unit_level"
-  | "unit_2_lines_big_small"
-  | "unit_2_lines_level"
-  | "school"
-  | "alt_school"
-  | "multidisciplinary"
-  | "vertical_unit"
-  | "vertical_unit_2_lines"
-  | "vertical_2_lines_level"
-  | "vertical_school"
-  | "vertical_school_unit"
-  | "vertical_school_unit_level"
+type LockupFieldLabels = {
+  line1: string
+  line2: string
+  line3: string
+  line4: string
+}
 
-export const LockupSelection = ({
-  allowChoice = false,
-  lockupChoice = "unit",
-}: {
-  allowChoice?: boolean
-  lockupChoice?: LockupOption
-}) => {
+const LOCKUP_FIELD_LABELS: Record<LockupOption, LockupFieldLabels> = {
+  unit: {
+    line1: "Department name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  school: {
+    line1: "School name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  vertical_unit: {
+    line1: "Department name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  vertical_school: {
+    line1: "School name",
+    line2: "",
+    line3: "",
+    line4: "",
+  },
+  unit_2_line: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "",
+    line4: "",
+  },
+  unit_level: {
+    line1: "Department name",
+    line2: "Parent unit",
+    line3: "",
+    line4: "",
+  },
+  unit_2_lines_big_small: {
+    line1: "Department small text",
+    line2: "Department big text",
+    line3: "",
+    line4: "",
+  },
+  alt_school: {
+    line1: "School name",
+    line2: "Department name",
+    line3: "",
+    line4: "",
+  },
+  multidisciplinary: {
+    line1: "Department name",
+    line2: "Long school name or a second school name",
+    line3: "",
+    line4: "",
+  },
+  vertical_unit_2_lines: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "",
+    line4: "",
+  },
+  unit_2_lines_level: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "Parent unit",
+    line4: "",
+  },
+  vertical_2_lines_level: {
+    line1: "Department line 1",
+    line2: "Department line 2",
+    line3: "Parent unit",
+    line4: "",
+  },
+  vertical_school_unit: {
+    line1: "School name",
+    line2: "Department line 1",
+    line3: "Department line 2",
+    line4: "",
+  },
+  vertical_school_unit_level: {
+    line1: "School name",
+    line2: "Department line 1",
+    line3: "Department line 2",
+    line4: "Parent unit",
+  },
+}
+
+export const LockupSelection = ({lockupChoice = "unit"}: {lockupChoice?: LockupOption}) => {
   let initLine1 = "Line 1"
   let initLine2 = "Line 2"
   let initLine3 = "Line 3"
@@ -132,7 +204,6 @@ export const LockupSelection = ({
   const {value: downloadInProgress, setValue: setDownloadInProgress} = useBoolean(false)
   const {value: downloadFailed, setValue: setDownloadFailed} = useBoolean(false)
 
-  const [lockupOption, setLockupOption] = useState<LockupOption>(lockupChoice)
   const [line1, setLine1State] = useState(initLine1)
   const setLine1 = useDebounceCallback(setLine1State, 500)
   const [line2, setLine2State] = useState(initLine2)
@@ -143,8 +214,8 @@ export const LockupSelection = ({
   const setLine4 = useDebounceCallback(setLine4State, 500)
 
   const formats = [
-    {name: "png-black", label: "PNG: all black logo, on transparent background", defaultChecked: false},
-    {name: "png-white", label: "PNG: all white logo, on transparent background", defaultChecked: false},
+    {name: "png-black", label: "PNG: all black logo, on transparent background", defaultChecked: true},
+    {name: "png-white", label: "PNG: all white logo, on transparent background", defaultChecked: true},
     {name: "png-full", label: "PNG: full color, on transparent background", defaultChecked: true},
     {name: "jpg", label: "JPG: full color, on white background", defaultChecked: true},
     {name: "svg", label: "SVG: full color, scalable vector graphics", defaultChecked: false},
@@ -206,72 +277,51 @@ export const LockupSelection = ({
         </div>
       )}
 
-      {allowChoice && (
-        <>
-          <p>Please select a logo style:</p>
-          <SelectList
-            label="Logo Style"
-            required
-            options={[
-              {value: "unit", label: "Unit (1 Line)"},
-              {value: "unit_2_line", label: "Unit (2 Lines)"},
-              {value: "unit_level", label: "Unit + Level (1 Line)"},
-              {value: "unit_2_lines_big_small", label: "Unit (2 Lines, Small/Big)"},
-              {value: "unit_2_lines_level", label: "Unit (2 Lines) + Level"},
-              {value: "school", label: "School Only"},
-              {value: "alt_school", label: "Alt School + Unit (1 Line)"},
-              {value: "multidisciplinary", label: "Multidisciplinary (or long school name)"},
-              {value: "vertical_unit", label: "Vertical - Unit"},
-              {value: "vertical_unit_2_lines", label: "Vertical - Unit (2 Lines)"},
-              {value: "vertical_2_lines_level", label: "Vertical - Unit (2 Lines) + Level"},
-              {value: "vertical_school", label: "Vertical - School"},
-              {value: "vertical_school_unit", label: "Vertical - School + Unit (2 Lines)"},
-              {value: "vertical_school_unit_level", label: "Vertical - School + Unit + Level"},
-            ]}
-            defaultValue="unit"
-            onChange={(_e, value) => setLockupOption(value as LockupOption)}
-          />
-        </>
-      )}
-
       <div
         ref={ref}
-        className={clsx("p-2 [&_svg]:h-[100px]", {"[&_svg]:h-[200px]": lockupOption.includes("vertical")})}
+        className={clsx("mb-6 p-2 [&_svg]:h-[100px]", {"[&_svg]:h-[200px]": lockupChoice.includes("vertical")})}
       >
-        <LockupElement lockupOption={lockupOption} line1={line1} line2={line2} line3={line3} line4={line4} />
+        <LockupElement lockupOption={lockupChoice} line1={line1} line2={line2} line3={line3} line4={line4} />
       </div>
       <form className="mb-10">
-        <LockupInput onChange={e => setLine1(e.target.value)} defaultValue={line1} label="Line 1" />
+        <LockupInput
+          onChange={e => setLine1(e.target.value)}
+          defaultValue={line1}
+          label={LOCKUP_FIELD_LABELS[lockupChoice].line1}
+        />
         <LockupInput
           onChange={e => setLine2(e.target.value)}
           defaultValue={line2}
-          label="Line 2"
-          hidden={["unit", "school", "vertical_unit", "vertical_school"].includes(lockupOption)}
+          label={LOCKUP_FIELD_LABELS[lockupChoice].line2}
+          hidden={["unit", "school", "vertical_unit", "vertical_school"].includes(lockupChoice)}
         />
         <LockupInput
           onChange={e => setLine3(e.target.value)}
           defaultValue={line3}
-          label="Line 3"
+          label={LOCKUP_FIELD_LABELS[lockupChoice].line3}
           hidden={
             ![
               "unit_2_lines_level",
               "vertical_2_lines_level",
               "vertical_school_unit",
               "vertical_school_unit_level",
-            ].includes(lockupOption)
+            ].includes(lockupChoice)
           }
         />
         <LockupInput
           onChange={e => setLine4(e.target.value)}
           defaultValue={line4}
-          label="Line 4"
-          hidden={"vertical_school_unit_level" != lockupOption}
+          label={LOCKUP_FIELD_LABELS[lockupChoice].line4}
+          hidden={"vertical_school_unit_level" != lockupChoice}
         />
 
         <fieldset>
           <legend className="mb-5 text-4xl font-bold">File Formats</legend>
           {formats.map(format => (
-            <label key={format.name} className="mb-2 flex cursor-pointer items-center gap-5 text-5xl hocus:underline">
+            <label
+              key={format.name}
+              className="mb-4 flex cursor-pointer items-center gap-5 text-4xl last:mb-0 hocus:underline"
+            >
               <input
                 type="checkbox"
                 checked={chosenFormats.includes(format.name)}
@@ -311,11 +361,13 @@ const LockupInput = ({
     setCount(e.target?.value.length || 0)
   }
   return (
-    <div className={clsx("mb-10 flex w-fit flex-col", {hidden})}>
-      <div className="flex items-center gap-5">
-        <label htmlFor={id}>{label}</label>
+    <div className={clsx("mb-6 flex w-fit flex-col", {hidden})}>
+      <div className="flex w-[45ch] flex-col gap-3">
+        <label className="font-bold" htmlFor={id}>
+          {label}
+        </label>
         <input
-          className="p-25 h-[40px] w-[250px] text-3xl"
+          className="p-25 mb-3 h-[40px] w-full text-3xl"
           id={id}
           onChange={onInputChange}
           defaultValue={defaultValue}
